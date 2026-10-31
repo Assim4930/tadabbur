@@ -5,11 +5,11 @@
 @section('content')
 @section('form')
 
-    <div class="flex items-center justify-center p-6 md:p-8">
-        <form action="{{ route('login.store') }}" method="POST" class="mx-auto mt-2 w-full max-w-xl rounded-3xl p-8 md:p-10 bg-[#071711]/90 border border-[#d4af37]/35 shadow-2xl backdrop-blur-xl">
+    <div class="flex items-center justify-center p-4 sm:p-6 md:p-8">
+        <form action="{{ route('login.store') }}" method="POST" class="mx-auto mt-1 sm:mt-2 w-full max-w-xl rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 bg-[#071711]/90 border border-[#d4af37]/35 shadow-2xl backdrop-blur-xl">
             @csrf
 
-            <h2 class="mb-6 text-3xl font-bold text-center text-[#fbf8f2] font-amiri">
+            <h2 class="mb-5 sm:mb-6 text-2xl sm:text-3xl font-bold text-center text-[#fbf8f2] font-amiri">
                 تسجيل الدخول
                 <span class="block text-xs uppercase tracking-widest text-[#f3d574] font-sans font-semibold mt-1">Welcome Back</span>
             </h2>

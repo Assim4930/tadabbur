@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 
     <title>@yield('title', 'تدبّر — Tadabbur')</title>
 
@@ -16,7 +16,7 @@
 </head>
 
 <body
-    class="min-h-screen bg-center bg-fixed bg-no-repeat antialiased selection:bg-[#d4af37]/30 selection:text-white text-[#fbf8f2]"
+    class="min-h-screen bg-[#06140e] bg-center bg-no-repeat md:bg-fixed antialiased selection:bg-[#d4af37]/30 selection:text-white text-[#fbf8f2] overflow-x-hidden"
     style="
         background-image: linear-gradient(180deg, rgba(6, 20, 14, 0.80) 0%, rgba(3, 11, 8, 0.90) 100%), url('{{ asset('images/tadabbur-bg.jpg') }}');
         background-size: cover;
@@ -24,7 +24,7 @@
 >
     <x-navbar :page="$page ?? ''" />
 
-    <main>
+    <main class="pb-20 sm:pb-12">
         @yield('content')
     </main>
 
