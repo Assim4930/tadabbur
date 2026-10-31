@@ -84,6 +84,10 @@
                     <span class="text-xs font-semibold text-[#f3d574] bg-[#0a1e16]/80 px-3 py-1 rounded-full border border-[#d4af37]/30">
                         {{ $bookmarkedQuotes->count() }} {{ Str::plural('quote', $bookmarkedQuotes->count()) }}
                     </span>
+                @else
+                    <span class="text-xs font-semibold text-[#f3d574] bg-[#0a1e16]/80 px-3 py-1 rounded-full border border-[#d4af37]/30">
+                        {{ $myQuotes->count() + $otherQuotes->count() }} {{ Str::plural('quote', $myQuotes->count() + $otherQuotes->count()) }}
+                    </span>
                 @endif
             </div>
 
@@ -91,7 +95,7 @@
             @if (($currentTab ?? 'all') === 'bookmarks')
                 @forelse ($bookmarkedQuotes as $quote)
                     <blockquote class="relative rounded-3xl bg-[#fcfaf4]/96 backdrop-blur-md p-6 text-[#0d2319] shadow-2xl border border-[#d4af37]/35 transition-all duration-300 hover:shadow-[0_15px_35px_rgba(212,175,55,0.2)] hover:-translate-y-0.5">
-                        <p class="text-lg md:text-xl font-medium leading-relaxed pr-12 text-[#0f281e]">
+                        <p class="text-lg md:text-xl font-medium leading-relaxed pr-20 text-[#0f281e]">
                             <span class="text-xl md:text-2xl text-[#aa771c] font-bold select-none inline-block align-baseline mr-1">«</span>
                             <span>{{ $quote->text }}</span>
                             <span class="text-xl md:text-2xl text-[#aa771c] font-bold select-none inline-block align-baseline ml-1">»</span>
@@ -104,8 +108,15 @@
                             <span>{{ $quote->created_at->format('M d, Y') }}</span>
                         </div>
 
-                        {{-- Action button (Remove bookmark) --}}
-                        <div class="absolute right-5 top-5">
+                        {{-- Action buttons (Copy & Remove bookmark) --}}
+                        <div class="absolute right-5 top-5 flex items-center gap-2">
+                            <button type="button" data-copy-quote="{{ $quote->text }}" title="نسخ الاقتباس / Copy quote"
+                                class="flex h-9 w-9 items-center justify-center rounded-full bg-[#0a1e16]/5 text-[#143a2b]/70 transition-all duration-200 hover:scale-110 hover:bg-[#d4af37]/20 hover:text-[#aa771c] border border-[#d4af37]/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" class="h-[17px] w-[17px] shrink-0" style="width: 17px; height: 17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+
                             <form action="{{ route('quotes.bookmark', $quote) }}" method="POST">
                                 @csrf
                                 <button type="submit" title="Remove from bookmarks" class="flex h-9 w-9 items-center justify-center rounded-full bg-[#d4af37]/15 text-[#aa771c] transition-all duration-200 hover:scale-110 hover:bg-[#d4af37]/25 shadow-sm border border-[#d4af37]/40">
@@ -142,7 +153,10 @@
                             <label class="block text-sm font-semibold text-[#f3d574]">تعديل الاقتباس / Edit your quote</label>
                             <textarea name="quote" rows="3" required minlength="3" maxlength="155" class="input"
                                 autofocus>{{ old('quote', $quote->text) }}</textarea>
-                            <p class="text-xs text-[#fbf8f2]/60">3–155 characters.</p>
+                            <div class="flex items-center justify-between text-xs text-[#fbf8f2]/60">
+                                <span>3–155 characters.</span>
+                                <span data-char-counter class="font-mono"></span>
+                            </div>
 
                             <div class="flex gap-2 pt-1">
                                 <button type="submit" class="btn btn-secondary text-sm">Save</button>
@@ -151,7 +165,7 @@
                         </form>
                     @else
                         <blockquote class="relative rounded-3xl bg-gradient-to-br from-[#123829]/95 via-[#0e2c20]/95 to-[#091d15]/98 p-6 text-[#fbf8f2] shadow-2xl border border-[#d4af37]/35 transition-all duration-300 hover:shadow-[0_15px_35px_rgba(20,58,43,0.4)] hover:border-[#d4af37]/60 hover:-translate-y-0.5">
-                            <p class="text-lg md:text-xl font-medium leading-relaxed pr-24 tracking-wide text-[#fbf8f2]">
+                            <p class="text-lg md:text-xl font-medium leading-relaxed pr-28 tracking-wide text-[#fbf8f2]">
                                 <span class="text-xl md:text-2xl text-[#f3d574] font-bold select-none inline-block align-baseline mr-1">«</span>
                                 <span>{{ $quote->text }}</span>
                                 <span class="text-xl md:text-2xl text-[#f3d574] font-bold select-none inline-block align-baseline ml-1">»</span>
@@ -164,6 +178,14 @@
 
                             {{-- Actions --}}
                             <div class="absolute right-5 bottom-5 flex items-center gap-2">
+                                {{-- Copy button --}}
+                                <button type="button" data-copy-quote="{{ $quote->text }}" title="نسخ الاقتباس / Copy quote"
+                                    class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 border border-white/15 text-[#fbf8f2]/85 transition-all duration-200 hover:scale-110 hover:bg-[#d4af37]/20 hover:text-[#f3d574]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" class="h-[15px] w-[15px] shrink-0" style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+
                                 {{-- Bookmark button --}}
                                 <form action="{{ route('quotes.bookmark', $quote) }}" method="POST" class="inline">
                                     @csrf
@@ -199,7 +221,7 @@
                 {{-- Other users' quotes: Warm Marble Parchment cards --}}
                 @foreach ($otherQuotes as $quote)
                     <blockquote class="relative rounded-3xl bg-[#fcfaf4]/96 backdrop-blur-md p-6 text-[#0d2319] shadow-xl border border-[#d4af37]/30 transition-all duration-300 hover:shadow-[0_15px_35px_rgba(212,175,55,0.2)] hover:-translate-y-0.5">
-                        <p class="text-lg md:text-xl font-medium leading-relaxed pr-12 text-[#0f281e]">
+                        <p class="text-lg md:text-xl font-medium leading-relaxed pr-20 text-[#0f281e]">
                             <span class="text-xl md:text-2xl text-[#aa771c] font-bold select-none inline-block align-baseline mr-1">«</span>
                             <span>{{ $quote->text }}</span>
                             <span class="text-xl md:text-2xl text-[#aa771c] font-bold select-none inline-block align-baseline ml-1">»</span>
@@ -212,8 +234,15 @@
                             <span>{{ $quote->created_at->format('M d, Y') }}</span>
                         </div>
 
-                        {{-- Bookmark button --}}
-                        <div class="absolute right-5 top-5">
+                        {{-- Copy & Bookmark buttons --}}
+                        <div class="absolute right-5 top-5 flex items-center gap-2">
+                            <button type="button" data-copy-quote="{{ $quote->text }}" title="نسخ الاقتباس / Copy quote"
+                                class="flex h-9 w-9 items-center justify-center rounded-full bg-[#0a1e16]/5 text-[#143a2b]/70 border border-[#d4af37]/30 transition-all duration-200 hover:scale-110 hover:bg-[#d4af37]/20 hover:text-[#aa771c]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" class="h-[17px] w-[17px] shrink-0" style="width: 17px; height: 17px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                            </button>
+
                             <form action="{{ route('quotes.bookmark', $quote) }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" title="{{ $quote->isBookmarkedBy(Auth::user()) ? 'Remove bookmark' : 'Bookmark quote' }}"
@@ -278,7 +307,10 @@
                     <label for="quote-body" class="block text-sm font-medium text-[#f3d574]">اكتب نص التدبّر أو الاقتباس / Your reflection</label>
                     <textarea id="quote-body" name="quote" rows="4" required minlength="3" maxlength="155" autofocus
                         placeholder="اكتب ما يجول بخاطرك من تدبّر أو حكمة مأثورة..." class="input resize-none"></textarea>
-                    <p class="text-xs text-[#fbf8f2]/50">3–155 characters.</p>
+                    <div class="flex items-center justify-between text-xs text-[#fbf8f2]/50">
+                        <span>3–155 characters.</span>
+                        <span data-char-counter class="font-mono">0 / 155</span>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-secondary w-full mt-2 text-base">إرسال · Send</button>
