@@ -1,4 +1,3 @@
-
 services:
   - type: web
     name: tadabbur
@@ -20,17 +19,11 @@ services:
       - key: APP_KEY
         generateValue: true
 
-      - key: APP_URL
-        sync: false
-
       - key: LOG_CHANNEL
         value: stderr
 
       - key: DB_CONNECTION
-        value: pgsql
-
-      - key: DB_URL
-        sync: false
+        value: sqlite
 
       - key: SESSION_DRIVER
         value: file
